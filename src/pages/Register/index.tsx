@@ -1,7 +1,10 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, Input, Button, Select, Typography } from "antd";
+import axios from "../../helpers/axios";
+import { Form, Input, Button, Select, Typography, message } from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { Organization } from "../../model";
 const { Title } = Typography;
 const { Option } = Select;
 
@@ -12,6 +15,23 @@ const validationSchema = Yup.object({
 });
 
 const Register = () => {
+  const [organization, setOrganization] = useState<Array<Organization> | []>(
+    []
+  );
+  const [messageApi, contextHolder] = message.useMessage();
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const result = await axios.get("/organization");
+        console.log(result);
+        setOrganization(result.data.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetch();
+  }, []);
   const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
@@ -20,16 +40,27 @@ const Register = () => {
       organization: "",
     },
     validationSchema,
-    onSubmit: (values, { setSubmitting }) => {
-      console.log(values);
+    onSubmit: async (values, { setSubmitting }) => {
+      try {
+        console.log(values);
+        await axios.post("/user/sign-up", values);
+        navigate("/");
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (err: any) {
+        console.log(err, "Error");
+        messageApi.open({
+          type: "error",
+          content: err.response.data.message,
+        });
+      }
       setSubmitting(false);
-      navigate("/");
     },
   });
 
   return (
     <div className="login-container">
       <div className="header">
+        {contextHolder}
         <Title level={2}>Register</Title>
       </div>
       <Form layout="vertical" autoComplete="off" onFinish={formik.handleSubmit}>
@@ -52,25 +83,7 @@ const Register = () => {
             onBlur={formik.handleBlur}
           />
         </Form.Item>
-        <Form.Item
-          className="input-container"
-          label="Password"
-          validateStatus={
-            formik.errors.password && formik.touched.password ? "error" : ""
-          }
-          help={
-            formik.errors.password && formik.touched.password
-              ? formik.errors.password
-              : ""
-          }
-        >
-          <Input.Password
-            name="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-        </Form.Item>
+
         <Form.Item
           className="input-container"
           label="Organization"
@@ -90,8 +103,33 @@ const Register = () => {
             onChange={(value) => formik.setFieldValue("organization", value)}
             onBlur={() => formik.setFieldTouched("organization", true)}
           >
-            <Option value="lucy">Lucy</Option>
+            {organization.map((item: Organization) => {
+              return (
+                <Option key={item._id} value={item._id}>
+                  {item.name}
+                </Option>
+              );
+            })}
           </Select>
+        </Form.Item>
+        <Form.Item
+          className="input-container"
+          label="Password"
+          validateStatus={
+            formik.errors.password && formik.touched.password ? "error" : ""
+          }
+          help={
+            formik.errors.password && formik.touched.password
+              ? formik.errors.password
+              : ""
+          }
+        >
+          <Input.Password
+            name="password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
         </Form.Item>
         <div>
           <Button
