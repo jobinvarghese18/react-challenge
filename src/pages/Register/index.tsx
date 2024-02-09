@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Form, Input, Button, Select, Typography } from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -11,6 +12,7 @@ const validationSchema = Yup.object({
 });
 
 const Register = () => {
+  const navigate = useNavigate();
   const formik = useFormik({
     initialValues: {
       username: "",
@@ -21,6 +23,7 @@ const Register = () => {
     onSubmit: (values, { setSubmitting }) => {
       console.log(values);
       setSubmitting(false);
+      navigate("/");
     },
   });
 

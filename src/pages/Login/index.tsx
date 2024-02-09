@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, Typography } from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+const { Title } = Typography;
 
 const validationSchema = Yup.object({
   username: Yup.string().required(),
@@ -24,6 +25,9 @@ const Login = () => {
   };
   return (
     <div className="login-container">
+      <div className="header">
+        <Title level={2}>Login</Title>
+      </div>
       <Form layout="vertical" autoComplete="off" onFinish={formik.handleSubmit}>
         <Form.Item
           name="username"
