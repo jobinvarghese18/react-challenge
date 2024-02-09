@@ -1,7 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { Form, Input, Button, Typography } from "antd";
+import axios from "../../helpers/axios";
+import Constants from "../../helpers/constants";
+import { Form, Input, Button, Typography, message } from "antd";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+
 const { Title } = Typography;
 
 const validationSchema = Yup.object({
@@ -9,14 +12,25 @@ const validationSchema = Yup.object({
   password: Yup.string().required(),
 });
 const Login = () => {
+  const [messageApi, contextHolder] = message.useMessage();
+
   const formik = useFormik({
     validationSchema,
     initialValues: {
       username: "",
       password: "",
     },
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (values) => {
+      try {
+        const result = await axios.post("/user/sign-in", values);
+        localStorage.setItem(Constants.ACCESS_TOKEN, result.data.token);
+      } catch (err: any) {
+        console.log(err, "Error");
+        messageApi.open({
+          type: "error",
+          content: err.response.data,
+        });
+      }
     },
   });
   const navigate = useNavigate();
@@ -25,6 +39,7 @@ const Login = () => {
   };
   return (
     <div className="login-container">
+      {contextHolder}
       <div className="header">
         <Title level={2}>Login</Title>
       </div>
