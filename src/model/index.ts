@@ -6,3 +6,11 @@ export interface Organization {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export interface User {
+  role: string;
+  _id: string;
+  name: string;
+  email: string;
+  __v: number;
+}
