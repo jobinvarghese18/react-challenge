@@ -4,6 +4,7 @@ import { Menu } from "antd";
 import Table from "../../components/table";
 import { Organization, User } from "../../model";
 import axios from "../../helpers/axios";
+import Constants from "../../helpers/constants";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -46,6 +47,8 @@ const Home = () => {
   useEffect(() => {
     const fetch = async () => {
       try {
+        const token = localStorage.getItem(Constants.ACCESS_TOKEN);
+        console.log("tok", token);
         const result = await axios.get("/organization");
         const userResult = await axios.get("/user");
         const users = userResult.data.data.map((item: User) => {

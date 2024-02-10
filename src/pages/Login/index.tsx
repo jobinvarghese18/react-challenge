@@ -23,7 +23,10 @@ const Login = () => {
     onSubmit: async (values) => {
       try {
         const result = await axios.post("/user/sign-in", values);
-        localStorage.setItem(Constants.ACCESS_TOKEN, result.data.token);
+        localStorage.setItem(
+          Constants.ACCESS_TOKEN,
+          result.data.data.access_token
+        );
         navigate("/home");
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
