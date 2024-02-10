@@ -1,10 +1,12 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Menu } from "antd";
 import Table from "../../components/table";
 import { Organization, User } from "../../model";
-import { useEffect, useState } from "react";
 import axios from "../../helpers/axios";
 
 const Home = () => {
+  const navigate = useNavigate();
   const [organization, setOrganization] = useState<Array<Organization> | []>(
     []
   );
@@ -21,6 +23,24 @@ const Home = () => {
       dataIndex: ["organization", "name"],
     },
     { key: "role", title: "Role", dataIndex: "role" },
+  ];
+
+  const menuItems = [
+    {
+      key: 1,
+      label: "Home",
+      onClick: () => {
+        navigate("/home");
+      },
+    },
+    {
+      key: 2,
+      label: "Login",
+      onClick: () => {
+        localStorage.clear();
+        navigate("/");
+      },
+    },
   ];
 
   useEffect(() => {
@@ -51,11 +71,8 @@ const Home = () => {
       <Menu
         theme="dark"
         mode="horizontal"
-        defaultSelectedKeys={["2"]}
-        items={[
-          { key: 1, label: "Home" },
-          { key: 2, label: "Login" },
-        ]}
+        defaultSelectedKeys={["1"]}
+        items={menuItems}
         style={{ flex: 1, minWidth: 0 }}
       />
 
