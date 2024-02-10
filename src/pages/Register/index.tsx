@@ -57,6 +57,10 @@ const Register = () => {
     },
   });
 
+  const handleRedirect = () => {
+    navigate("/");
+  };
+
   return (
     <div className="login-container">
       <div className="header">
@@ -138,6 +142,9 @@ const Register = () => {
             disabled={formik.isSubmitting}
           >
             Submit
+          </Button>
+          <Button type="link" htmlType="button" onClick={handleRedirect}>
+            Already have account ?
           </Button>
         </div>
       </Form>

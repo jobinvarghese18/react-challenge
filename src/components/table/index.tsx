@@ -4,7 +4,7 @@ import { AnyObject } from "yup";
 interface TableColumn {
   key: string;
   title: string;
-  dataIndex: string;
+  dataIndex: string | Array<string>;
 }
 interface Props {
   data: AnyObject[];

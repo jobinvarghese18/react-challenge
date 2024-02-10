@@ -24,6 +24,7 @@ const Login = () => {
       try {
         const result = await axios.post("/user/sign-in", values);
         localStorage.setItem(Constants.ACCESS_TOKEN, result.data.token);
+        navigate("/home");
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         console.log(err, "Error");
