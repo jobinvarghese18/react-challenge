@@ -24,7 +24,6 @@ const Register = () => {
     const fetch = async () => {
       try {
         const result = await axios.get("/organization");
-        console.log(result);
         setOrganization(result.data.data);
       } catch (err) {
         console.log(err);
@@ -42,7 +41,6 @@ const Register = () => {
     validationSchema,
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        console.log(values);
         await axios.post("/user/sign-up", values);
         navigate("/");
         // eslint-disable-next-line @typescript-eslint/no-explicit-any

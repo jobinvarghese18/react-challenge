@@ -4,7 +4,6 @@ import { Menu } from "antd";
 import Table from "../../components/table";
 import { Organization, User } from "../../model";
 import axios from "../../helpers/axios";
-import Constants from "../../helpers/constants";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -47,21 +46,24 @@ const Home = () => {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const token = localStorage.getItem(Constants.ACCESS_TOKEN);
-        console.log("tok", token);
         const result = await axios.get("/organization");
-        const userResult = await axios.get("/user");
-        const users = userResult.data.data.map((item: User) => {
-          return { ...item, key: item._id };
-        });
-
-        setUsers(users);
         const data = result.data.data?.map(
           (item: Organization, index: number) => {
             return { key: index, ...item };
           }
         );
         setOrganization(data);
+      } catch (err) {
+        setOrganization([]);
+        console.log(err);
+      }
+      try {
+        const userResult = await axios.get("/user");
+        const users = userResult.data.data.map((item: User) => {
+          return { ...item, key: item._id };
+        });
+
+        setUsers(users);
       } catch (err) {
         console.log(err);
       }
@@ -81,8 +83,12 @@ const Home = () => {
 
       <div className="layout">
         <div className="layout-content">
-          <h2>Organization</h2>
-          <Table data={organization} columns={columns} />
+          {!!organization?.length && (
+            <>
+              <h2>Organization</h2>
+              <Table data={organization} columns={columns} />
+            </>
+          )}
 
           <h2>Employees</h2>
           <Table data={users} columns={userColumns} />
