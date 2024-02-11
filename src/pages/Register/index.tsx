@@ -23,7 +23,7 @@ const Register = () => {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const result = await axios.get("/organization");
+        const result = await axios.get("/organization/list");
         setOrganization(result.data.data);
       } catch (err) {
         console.log(err);
